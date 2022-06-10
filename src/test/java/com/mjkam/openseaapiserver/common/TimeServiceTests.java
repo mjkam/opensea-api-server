@@ -17,7 +17,7 @@ public class TimeServiceTests {
 
     @Test
     @DisplayName("clock 시간 기준으로 시간 리턴")
-    void givenSameClock_shouldReturnSameLocalDateTime() {
+    void Given_FixedClock_When_GetCurrentDateTime_Then_ReturnLocalDateTimeByFixedClock() {
         //given
         Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
         sut = new TimeService(clock);
@@ -26,7 +26,7 @@ public class TimeServiceTests {
         LocalDateTime dut = sut.getCurrentDateTime();
 
         //then
-        assertThat(dut).isEqualTo(LocalDateTime.now(clock));
+        assertThat(dut).isEqualTo(LocalDateTime.now(clock).truncatedTo(ChronoUnit.SECONDS));
     }
 }
 
