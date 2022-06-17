@@ -4,9 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.mjkam.openseaapiserver.common.TimeService;
+import com.mjkam.openseaapiserver.common.time.ServerTime;
 import com.mjkam.openseaapiserver.config.JwtConfigurationProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 public class JwtServiceTests {
     private JwtService sut;
     @Mock
-    private TimeService timeService;
+    private ServerTime serverTime;
     @Mock
     private JwtConfigurationProperties jwtConfigurationProperties;
 
@@ -36,7 +35,7 @@ public class JwtServiceTests {
         given(jwtConfigurationProperties.getSecret()).willReturn(secret("secret"));
         given(jwtConfigurationProperties.getDuration()).willReturn(duration(100));
 
-        sut = new JwtService(timeService, jwtConfigurationProperties);
+        sut = new JwtService(serverTime, jwtConfigurationProperties);
     }
 
     @Test
@@ -44,7 +43,7 @@ public class JwtServiceTests {
     void Given_ExpiredJwt_When_GetUserIdFromJwt_ThenThrowJWTVerificationException() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).minusDays(10L);
-        given(timeService.getCurrentDateTime()).willReturn(currentDateTime);
+        given(serverTime.getCurrentDateTime()).willReturn(currentDateTime);
         String jwt = sut.createJwt(userId(1L));
 
         //when then
@@ -58,7 +57,7 @@ public class JwtServiceTests {
     void Given_NotExpiredJwt_When_GetUserIdFromJwt_ThenReturn() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        given(timeService.getCurrentDateTime()).willReturn(currentDateTime);
+        given(serverTime.getCurrentDateTime()).willReturn(currentDateTime);
 
         String jwt = sut.createJwt(userId(1L));
 
@@ -75,7 +74,7 @@ public class JwtServiceTests {
     void Given_CurrentDateTime_When_CreateJwt_Then_ReturnNotExpiredJwt() {
         //given
         LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        given(timeService.getCurrentDateTime()).willReturn(currentDateTime);
+        given(serverTime.getCurrentDateTime()).willReturn(currentDateTime);
 
         //when
         String resultJwt = sut.createJwt(userId(1L));

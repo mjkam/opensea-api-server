@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.mjkam.openseaapiserver.common.TimeService;
+import com.mjkam.openseaapiserver.common.time.ServerTime;
 import com.mjkam.openseaapiserver.config.JwtConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class JwtService {
-    private final TimeService timeService;
+    private final ServerTime serverTime;
     private final JwtConfigurationProperties jwtConfigurationProperties;
     public String createJwt(long userId) {
-        LocalDateTime currentDateTime = timeService.getCurrentDateTime();
+        LocalDateTime currentDateTime = serverTime.getCurrentDateTime();
         LocalDateTime expireDateTime = currentDateTime.plusSeconds(jwtConfigurationProperties.getDuration());
 
         Algorithm algorithm = Algorithm.HMAC256(jwtConfigurationProperties.getSecret());
