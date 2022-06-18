@@ -33,6 +33,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.7.0'
 
+	// https://mvnrepository.com/artifact/org.web3j/crypto
+	implementation group: 'org.web3j', name: 'crypto', version: '5.0.0'
+
+	// https://mvnrepository.com/artifact/commons-codec/commons-codec
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+
+
 }
 
 tasks.named('test') {
